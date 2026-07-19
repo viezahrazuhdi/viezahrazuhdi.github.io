@@ -1579,7 +1579,7 @@ async function renderPengaturanSistem() {
     html += '<div class="col-md-6 mb-2"><label class="form-label small fw-bold text-secondary">NIP Kepsek</label><input type="text" id="id-nip" class="form-control border-0 py-2 shadow-sm" required></div>';
     html += '</div>';
     html += '<div class="row mb-4">';
-    html += '<div class="col-md-6 mb-2"><label class="form-label small fw-bold text-secondary">URL Logo Kiri (Provinsi)</label><input type="url" id="id-logo-kiri" class="form-control border-0 py-2 shadow-sm"></div>';
+    html += '<div class="col-md-6 mb-2"><label class="form-label small fw-bold text-secondary">URL Logo Kiri (Daerah)</label><input type="url" id="id-logo-kiri" class="form-control border-0 py-2 shadow-sm"></div>';
     html += '<div class="col-md-6 mb-2"><label class="form-label small fw-bold text-secondary">URL Logo Kanan (Sekolah)</label><input type="url" id="id-logo-kanan" class="form-control border-0 py-2 shadow-sm"></div>';
     html += '</div>';
     html += '<button type="submit" id="btn-simpan-identitas" class="btn btn-primary fw-bold py-2 px-4 shadow-sm"><i class="fa-solid fa-save me-2"></i>Simpan Identitas</button>';
