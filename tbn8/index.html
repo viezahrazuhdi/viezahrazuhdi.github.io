@@ -1,0 +1,915 @@
+<!DOCTYPE html>
+<html lang="id">
+  <head>
+	<meta charset="UTF-8">
+    <base target="_top">
+	<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+	<link rel="icon" type="image/x-icon" href="favicon.ico">
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600&display=swap" rel="stylesheet">
+    <link href="https://cdn.jsdelivr.net/npm/simple-datatables@latest/dist/style.css" rel="stylesheet" type="text/css">
+	
+    <link rel="stylesheet" href="style.css">
+	<title>WebApp Presensi - SMAN 1 Tamban</title>
+  </head>
+  <body>
+
+    <div id="app-loader" class="d-flex justify-content-center align-items-center vh-100 bg-white">
+      <div class="text-center">
+        <div class="spinner-border text-primary" role="status" style="width: 3rem; height: 3rem;"></div>
+        <p class="mt-3 text-secondary fw-medium">Sinkronisasi Sistem...</p>
+      </div>
+    </div>
+
+    <div id="login-screen" class="d-none bg-light">
+      <div class="container">
+        <div class="row justify-content-center align-items-center vh-100">
+          <div class="col-md-4">
+            <div class="card shadow-lg border-0" style="border-radius: 16px;">
+              <div class="card-body p-5">
+                <div class="text-center mb-4">
+                  <i class="fa-solid fa-school fa-3x text-primary mb-3"></i>
+                  <h4 class="fw-bold">LOGIN</h4>
+                  <p class="text-muted small">Silakan masuk dengan akun Anda</p>
+                </div>
+                
+                <form id="form-login">
+                  <div class="mb-3">
+                    <label class="form-label small fw-bold">Username</label>
+                    <div class="input-group">
+                      <span class="input-group-text bg-light border-0"><i class="fa-solid fa-user text-muted"></i></span>
+                      <input type="text" id="username" class="form-control bg-light border-0" placeholder="Masukkan username" required>
+                    </div>
+                  </div>
+                  <div class="mb-4">
+                    <label class="form-label small fw-bold">Password</label>
+                    <div class="input-group">
+                      <span class="input-group-text bg-light border-0"><i class="fa-solid fa-lock text-muted"></i></span>
+                      <input type="password" id="password" class="form-control bg-light border-0" placeholder="Masukkan password" required>
+                      <span class="input-group-text bg-light border-0" style="cursor: pointer;" onclick="togglePassword()">
+                        <i class="fa-solid fa-eye text-muted" id="icon-eye"></i>
+                      </span>
+                    </div>
+                  </div>
+                  <button type="submit" id="btn-login" class="btn btn-primary w-100 py-2 fw-bold shadow-sm">
+                    MASUK SEKARANG
+                  </button>
+				  <div class="d-flex align-items-center my-3">
+                    <hr class="flex-grow-1 text-muted">
+                    <span class="mx-2 text-muted small">ATAU</span>
+                    <hr class="flex-grow-1 text-muted">
+                  </div>
+                  
+                  <!-- GANTI DATA-CLIENT_ID DENGAN MILIK ANDA -->
+                  <div id="g_id_onload"
+                       data-client_id="960661681908-8skogp1ld044rv4kt3sqoh001hp6taff.apps.googleusercontent.com"
+                       data-context="signin"
+                       data-ux_mode="popup"
+                       data-callback="handleGoogleLogin"
+                       data-auto_prompt="false">
+                  </div>
+                  <div class="g_id_signin"
+                       data-type="standard"
+                       data-shape="rectangular"
+                       data-theme="outline"
+                       data-text="signin_with"
+                       data-size="large"
+                       data-logo_alignment="left"
+                       style="display: flex; justify-content: center;">
+                  </div>
+                </form>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div id="main-app" class="d-none">
+      <div class="d-flex">
+        
+        <nav id="sidebar" class="shadow-lg">
+          <div class="p-4 d-flex justify-content-between align-items-start border-bottom border-secondary">
+            <div>
+              <h4 class="text-white fw-bold mb-0"><i class="fa-solid fa-graduation-cap me-2"></i>SMATA</h4>
+            </div>
+            <span role="button" class="text-white-50 p-0 lh-1 d-md-none fs-3 text-hover-white" onclick="toggleSidebar()">
+              <i class="fa-solid fa-xmark"></i>
+            </span>
+          </div>
+          
+          <div class="mt-0 mb-3">
+            <span role="button" class="nav-link active" onclick="switchMenu('dashboard', this)">
+              <i class="fa-solid fa-house"></i> <span>Dashboard</span>
+            </span>
+
+            <span role="button" data-bs-toggle="collapse" data-bs-target="#drop-akademik" class="nav-link d-flex justify-content-between align-items-center">
+              <span><i class="fa-solid fa-book-open"></i> Akademik</span>
+              <i class="fa-solid fa-chevron-down arrow-icon"></i>
+            </span>
+            <div class="collapse" id="drop-akademik">
+			  <span id="menu-mod-05" role="button" class="nav-link lvl-2" onclick="switchMenu('jurnal-mengajar', this)" style="display: none;">
+                <i class="fa-solid fa-book-journal-whills"></i> Jurnal & Presensi
+              </span>
+			  <span id="menu-mod-06" role="button" class="nav-link lvl-2" onclick="switchMenu('intervensi-wali', this)" style="display: none;">
+                <i class="fa-solid fa-user-shield"></i> Intervensi Wali Kelas
+              </span>
+            </div>
+
+            <span id="menu-mod-03" role="button" class="nav-link" onclick="switchMenu('presensi-umum', this)" style="display: none;">
+              <i class="fa-solid fa-qrcode"></i> <span>Presensi Umum</span>
+            </span>
+            <span id="menu-mod-04" role="button" class="nav-link" onclick="switchMenu('laporan', this)" style="display: none;">
+              <i class="fa-solid fa-file-invoice"></i> <span>Laporan</span>
+            </span>
+			
+			<span id="menu-master-data" role="button" data-bs-toggle="collapse" data-bs-target="#drop-master" class="nav-link d-flex justify-content-between align-items-center">
+              <span><i class="fa-solid fa-database"></i> Master Data</span>
+              <i class="fa-solid fa-chevron-down arrow-icon"></i>
+            </span>
+            <div class="collapse" id="drop-master">
+              <span id="menu-mod-01" role="button" class="nav-link lvl-2" onclick="switchMenu('master-siswa', this)" style="display: none;">
+                <i class="fa-solid fa-user-graduate"></i> Data Siswa
+              </span>
+              <span id="menu-mod-02" role="button" class="nav-link lvl-2" onclick="switchMenu('master-guru', this)" style="display: none;">
+                <i class="fa-solid fa-chalkboard-user"></i> Data Guru
+              </span>
+            </div>
+			
+			<span role="button" class="nav-link" id="menu-kenaikan-kelas" onclick="switchMenu('manajemen-database', this)" style="display: none;">
+              <i class="fa-solid fa-server text-success"></i> <span class="text-success">Manajemen Database</span>
+            </span>
+			
+			<span role="button" class="nav-link" id="menu-manajemen-user" onclick="switchMenu('manajemen-user', this)" style="display: none;">
+              <i class="fa-solid fa-users-gear text-info"></i> <span class="text-info">Manajemen Pengguna</span>
+            </span>
+            
+            <span role="button" class="nav-link" id="menu-pengaturan" onclick="switchMenu('pengaturan-sistem', this)" style="display: none;">
+              <i class="fa-solid fa-gears text-warning"></i> <span class="text-warning">Pengaturan Sistem</span>
+            </span>
+			
+			<hr class="mx-4 text-secondary opacity-25">
+            <div class="px-4 pb-4">
+              <div class="d-flex align-items-center text-white-50">
+                <div class="bg-secondary rounded-circle me-2 d-flex justify-content-center align-items-center" style="width: 30px; height: 30px;">
+                  <i class="fa-solid fa-user-tie text-white small"></i>
+                </div>
+                <!-- text-truncate akan otomatis memotong teks panjang menjadi "..." -->
+                <div class="text-truncate small fw-medium" id="sidebar-nama-user" style="max-width: 150px;">
+                  Memuat...
+                </div>
+              </div>
+            </div>
+          </div>
+        </nav>
+
+        <div id="main-content">
+          <header class="bg-white p-3 shadow-sm d-flex justify-content-between align-items-center">
+            <button class="btn btn-light d-md-none" onclick="toggleSidebar()"><i class="fa-solid fa-bars"></i></button>
+            <div class="ms-auto d-flex align-items-center">
+			  <span id="display-role" class="badge bg-primary me-3">Admin</span>
+			  
+			  <!-- Dropdown Profil -->
+			  <div class="dropdown">
+				<div class="bg-light p-2 rounded-circle dropdown-toggle" role="button" data-bs-toggle="dropdown" aria-expanded="false" style="width: 40px; height: 40px; display: flex; align-items: center; justify-content: center; cursor: pointer;">
+				  <i class="fa-solid fa-user text-primary"></i>
+				</div>
+				<ul class="dropdown-menu dropdown-menu-end shadow border-0 mt-2">
+				  <li>
+					<a class="dropdown-item py-2" href="#" data-bs-toggle="modal" data-bs-target="#modalUbahPassword">
+					  <i class="fa-solid fa-key text-warning me-2"></i>Ubah Password
+					</a>
+				  </li>
+				  <li><hr class="dropdown-divider"></li>
+				  <li>
+					<a class="dropdown-item py-2 text-danger" href="#" onclick="handleLogout()">
+					  <i class="fa-solid fa-right-from-bracket me-2"></i>Keluar
+					</a>
+				  </li>
+				</ul>
+			  </div>
+			</div>
+          </header>
+
+          <div class="p-4 flex-grow-1" id="content-view">
+          </div>
+        </div>
+
+      </div>
+    </div>
+	
+	<!-- MODAL EARLY WARNING SYSTEM (EWS) -->
+	<div class="modal fade" id="modalEWS" data-bs-backdrop="static" tabindex="-1" aria-hidden="true">
+	  <div class="modal-dialog modal-dialog-centered modal-lg">
+		<div class="modal-content border-0 shadow-lg" style="border-radius: 16px;">
+		  <div class="modal-header bg-danger text-white border-0 pt-4 px-4" style="border-radius: 16px 16px 0 0;">
+			<h5 class="modal-title fw-bold"><i class="fa-solid fa-triangle-exclamation me-2"></i>Peringatan Dini Kehadiran</h5>
+		  </div>
+		  <div class="modal-body px-4 py-4">
+			<div class="alert alert-warning border-0 shadow-sm mb-4">
+			  <strong>Perhatian Wali Kelas!</strong> Siswa berikut telah melampaui batas maksimal Alpa. Mohon segera lakukan tindakan preventif dan catat di bawah ini.
+			</div>
+			<div id="ews-container">
+			  <!-- Form EWS akan di-generate oleh JS -->
+			</div>
+		  </div>
+		</div>
+	  </div>
+	</div>
+
+    <div class="modal fade" id="modalTambahSiswa" data-bs-backdrop="static" tabindex="-1" aria-hidden="true">
+      <div class="modal-dialog modal-dialog-centered modal-lg">
+        <div class="modal-content border-0 shadow-lg" style="border-radius: 16px;">
+          <div class="modal-header border-0 pt-4 px-4">
+            <h5 class="modal-title fw-bold text-dark"><i class="fa-solid fa-user-plus text-primary me-2"></i>Tambah Siswa Baru</h5>
+            <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+          </div>
+          <form id="form-tambah-siswa">
+            <div class="modal-body px-4 pb-4" style="max-height: 70vh; overflow-y: auto;">
+              
+              <h6 class="fw-bold text-primary mb-3 border-bottom pb-1"><i class="fa-solid fa-id-card me-1"></i> Data Identitas & Akademik</h6>
+              <div class="row">
+				<div class="col-md-6 mb-3">
+                  <label class="form-label small fw-bold text-secondary">NIS Sekolah</label>
+                  <input type="text" id="p-nis" class="form-control bg-light border-0 py-2" placeholder="Contoh: 2324001" required>
+                </div>
+                <div class="col-md-6 mb-3">
+                  <label class="form-label small fw-bold text-secondary">NISN</label>
+                  <input type="text" id="p-nisn" class="form-control bg-light border-0 py-2" placeholder="Contoh: 0056123456" required>
+                </div>
+              </div>
+              <div class="mb-3">
+                <label class="form-label small fw-bold text-secondary">Nama Lengkap Siswa</label>
+                <input type="text" id="p-nama" class="form-control bg-light border-0 py-2" placeholder="Masukkan nama sesuai ijazah" required>
+              </div>
+			  <div class="row">
+                <div class="col-md-8 mb-3">
+                  <label class="form-label small fw-bold text-secondary">NIK</label>
+                  <input type="text" id="p-nik" class="form-control bg-light border-0 py-2" placeholder="Masukkan NIK sesuai kartu keluarga">
+                </div>
+                <div class="col-md-4 mb-3">
+                  <label class="form-label small fw-bold text-secondary">Jenis Kelamin</label>
+                  <select id="p-jk" class="form-select bg-light border-0 py-2" required>
+                    <option value="L">Laki-laki (L)</option>
+                    <option value="P">Perempuan (P)</option>
+                  </select>
+                </div>
+              </div>
+              <div class="row">
+                <div class="col-md-6 mb-3">
+                  <label class="form-label small fw-bold text-secondary">Tingkat Kelas</label>
+                  <select id="p-tingkat" class="form-select bg-light border-0 py-2" required>
+                    <option value="" disabled selected>Pilih Tingkat</option>
+                    <option value="X">X (Sepuluh)</option>
+                    <option value="XI">XI (Sebelas)</option>
+                    <option value="XII">XII (Dua Belas)</option>
+                  </select>
+                </div>
+                <div class="col-md-6 mb-3">
+                  <label class="form-label small fw-bold text-secondary">Rombel / Jurusan</label>
+                  <input type="text" id="p-rombel" class="form-control bg-light border-0 py-2" placeholder="Contoh: PPLG 1 / IPA 2" required>
+                </div>
+              </div>
+
+              <h6 class="fw-bold text-primary mt-4 mb-3 border-bottom pb-1"><i class="fa-solid fa-user me-1"></i> Detail Pribadi & Foto</h6>
+              <div class="row">
+                <div class="col-md-5 mb-3">
+                  <label class="form-label small fw-bold text-secondary">Tempat Lahir</label>
+                  <input type="text" id="p-tempat-lahir" class="form-control bg-light border-0 py-2" placeholder="Contoh: Banjarmasin">
+                </div>
+                <div class="col-md-4 mb-3">
+                  <label class="form-label small fw-bold text-secondary">Tanggal Lahir</label>
+                  <input type="date" id="p-tanggal-lahir" class="form-control bg-light border-0 py-2">
+                </div>
+                <div class="col-md-4 mb-3">
+                  <label class="form-label small fw-bold text-secondary">Golongan Darah</label>
+                  <select id="p-goldarah" class="form-select bg-light border-0 py-2">
+                    <option value="-" selected>-</option>
+                    <option value="A">A</option>
+                    <option value="B">B</option>
+                    <option value="AB">AB</option>
+                    <option value="O">O</option>
+                  </select>
+                </div>
+              </div>
+              <div class="mb-3">
+                <label class="form-label small fw-bold text-secondary">Alamat Lengkap</label>
+                <textarea id="p-alamat" class="form-control bg-light border-0 py-2" rows="2" placeholder="Masukkan nama jalan, RT/RW, dan Kecamatan"></textarea>
+              </div>
+              <div class="mb-3">
+                <label class="form-label small fw-bold text-secondary">Upload Foto Siswa (Format JPG/PNG)</label>
+                <input type="file" id="p-foto" class="form-control bg-light border-0 py-2" accept="image/png, image/jpeg, image/jpg">
+              </div>
+
+              <h6 class="fw-bold text-primary mt-4 mb-3 border-bottom pb-1"><i class="fa-solid fa-users me-1"></i> Data Kontak Orang Tua / Wali</h6>
+              <div class="row">
+                <div class="col-md-6 mb-3">
+                  <label class="form-label small fw-bold text-secondary">Nama Wali Murid</label>
+                  <input type="text" id="p-wali" class="form-control bg-light border-0 py-2" placeholder="Nama Ayah/Ibu/Wali">
+                </div>
+                <div class="col-md-6 mb-3">
+                  <label class="form-label small fw-bold text-secondary">No. HP Wali (WhatsApp)</label>
+                  <input type="text" id="p-hp-wali" class="form-control bg-light border-0 py-2" placeholder="Contoh: 08123456789">
+                </div>
+              </div>
+              <div class="row">
+                <div class="col-md-6 mb-3">
+                  <label class="form-label small fw-bold text-secondary">Email Wali</label>
+                  <input type="email" id="p-email-wali" class="form-control bg-light border-0 py-2" placeholder="contoh@email.com">
+                </div>
+                <div class="col-md-6 mb-3">
+                  <label class="form-label small fw-bold text-secondary">Telegram Chat ID Wali</label>
+                  <input type="text" id="p-tele-wali" class="form-control bg-light border-0 py-2" placeholder="Contoh: 123456789">
+                </div>
+              </div>
+
+            </div>
+            <div class="modal-footer border-0 px-4 pb-4">
+              <button type="button" class="btn btn-light fw-medium py-2 px-3" data-bs-dismiss="modal">Batal</button>
+              <button type="submit" id="btn-simpan-siswa" class="btn btn-primary fw-bold py-2 px-4 shadow-sm">Simpan Data</button>
+            </div>
+          </form>
+        </div>
+      </div>
+    </div>
+	
+	<!-- MODAL IMPORT DATA SISWA -->
+    <div class="modal fade" id="modalImportSiswa" data-bs-backdrop="static" tabindex="-1" aria-hidden="true">
+      <div class="modal-dialog modal-dialog-centered">
+        <div class="modal-content border-0 shadow-lg" style="border-radius: 16px;">
+          <div class="modal-header border-0 pt-4 px-4">
+            <h5 class="modal-title fw-bold text-dark"><i class="fa-solid fa-file-excel text-success me-2"></i>Import Data Siswa</h5>
+            <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+          </div>
+          <div class="modal-body px-4 pb-4">
+            <div class="alert alert-info small mb-4">
+              <i class="fa-solid fa-circle-info me-2"></i>
+              Pastikan file Excel Anda sesuai dengan format template sistem. 
+              <a href="#" onclick="downloadTemplateExcel()" class="fw-bold text-decoration-none">Unduh Template Excel di sini</a>.
+            </div>
+            
+            <form id="form-import-siswa">
+              <div class="mb-3">
+                <label class="form-label small fw-bold text-secondary">Pilih File Excel (.xlsx / .xls)</label>
+                <input type="file" id="file-excel-siswa" class="form-control bg-light border-0 py-2" accept=".xlsx, .xls, .csv" required>
+              </div>
+              <button type="submit" id="btn-proses-import" class="btn btn-success w-100 fw-bold py-2 shadow-sm">
+                <i class="fa-solid fa-upload me-2"></i>Mulai Import Data
+              </button>
+            </form>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="modal fade" id="modalEditSiswa" data-bs-backdrop="static" tabindex="-1" aria-hidden="true">
+      <div class="modal-dialog modal-dialog-centered modal-lg">
+        <div class="modal-content border-0 shadow-lg" style="border-radius: 16px;">
+          <div class="modal-header border-0 pt-4 px-4">
+            <h5 class="modal-title fw-bold text-dark"><i class="fa-solid fa-user-pen text-warning me-2"></i>Ubah Data Siswa</h5>
+            <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+          </div>
+          <form id="form-edit-siswa">
+            <input type="hidden" id="edit-id-siswa">
+            <input type="hidden" id="e-foto-lama">
+
+            <div class="modal-body px-4 pb-4" style="max-height: 70vh; overflow-y: auto;">
+              
+              <h6 class="fw-bold text-warning mb-3 border-bottom pb-1"><i class="fa-solid fa-id-card me-1"></i> Data Identitas & Akademik</h6>
+              <div class="row">
+				<div class="col-md-6 mb-3">
+                  <label class="form-label small fw-bold text-secondary">NIS Sekolah</label>
+                  <input type="text" id="e-nis" class="form-control bg-light border-0 py-2" required readonly>
+                </div>
+                <div class="col-md-6 mb-3">
+                  <label class="form-label small fw-bold text-secondary">NISN</label>
+                  <input type="text" id="e-nisn" class="form-control bg-light border-0 py-2" required>
+                </div>
+              </div>
+			  <div class="row">
+                <div class="col-md-6 mb-3">
+                  <label class="form-label small fw-bold text-secondary">Nama Lengkap Siswa</label>
+				  <input type="text" id="e-nama" class="form-control bg-light border-0 py-2" required>
+                </div>
+                <div class="col-md-6 mb-3">
+                  <label class="form-label small fw-bold text-secondary">NIK</label>
+				  <input type="text" id="e-nik" class="form-control bg-light border-0 py-2">
+                </div>
+              </div>
+              <div class="row">
+                <div class="col-md-6 mb-3">
+                  <label class="form-label small fw-bold text-secondary">Jenis Kelamin</label>
+                  <select id="e-jk" class="form-select bg-light border-0 py-2" required>
+                    <option value="L">Laki-laki (L)</option>
+                    <option value="P">Perempuan (P)</option>
+                  </select>
+                </div>
+                <div class="col-md-6 mb-3">
+                  <label class="form-label small fw-bold text-secondary">Status Siswa</label>
+                  <select id="e-status" class="form-select bg-light border-0 py-2" required>
+                    <option value="Aktif">Aktif</option>
+                    <option value="Nonaktif">Nonaktif</option>
+                    <option value="Lulus">Lulus</option>
+                    <option value="Mutasi">Mutasi</option>
+                  </select>
+                </div>
+              </div>
+              <div class="row">
+                <div class="col-md-6 mb-3">
+                  <label class="form-label small fw-bold text-secondary">Tingkat Kelas</label>
+                  <select id="e-tingkat" class="form-select bg-light border-0 py-2" required>
+                    <option value="X">X (Sepuluh)</option>
+                    <option value="XI">XI (Sebelas)</option>
+                    <option value="XII">XII (Dua Belas)</option>
+                  </select>
+                </div>
+                <div class="col-md-6 mb-3">
+                  <label class="form-label small fw-bold text-secondary">Rombel / Jurusan</label>
+                  <input type="text" id="e-rombel" class="form-control bg-light border-0 py-2" required>
+                </div>
+              </div>
+
+              <h6 class="fw-bold text-warning mt-4 mb-3 border-bottom pb-1"><i class="fa-solid fa-user me-1"></i> Detail Pribadi & Foto</h6>
+              <div class="row">
+                <div class="col-md-5 mb-3">
+                  <label class="form-label small fw-bold text-secondary">Tempat Lahir</label>
+                  <input type="text" id="e-tempat-lahir" class="form-control bg-light border-0 py-2" placeholder="Contoh: Banjarmasin">
+                </div>
+                <div class="col-md-4 mb-3">
+                  <label class="form-label small fw-bold text-secondary">Tanggal Lahir</label>
+                  <input type="date" id="e-tanggal-lahir" class="form-control bg-light border-0 py-2">
+                </div>
+                <div class="col-md-4 mb-3">
+                  <label class="form-label small fw-bold text-secondary">Golongan Darah</label>
+                  <select id="e-goldarah" class="form-select bg-light border-0 py-2">
+                    <option value="-">-</option>
+                    <option value="A">A</option>
+                    <option value="B">B</option>
+                    <option value="AB">AB</option>
+                    <option value="O">O</option>
+                  </select>
+                </div>
+              </div>
+              <div class="mb-3">
+                <label class="form-label small fw-bold text-secondary">Alamat Lengkap</label>
+                <textarea id="e-alamat" class="form-control bg-light border-0 py-2" rows="2"></textarea>
+              </div>
+              <div class="mb-3">
+                <label class="form-label small fw-bold text-secondary">Ganti Foto Siswa (Biarkan kosong jika tidak ingin diubah)</label>
+                <input type="file" id="e-foto" class="form-control bg-light border-0 py-2" accept="image/png, image/jpeg, image/jpg">
+              </div>
+
+              <h6 class="fw-bold text-warning mt-4 mb-3 border-bottom pb-1"><i class="fa-solid fa-users me-1"></i> Data Kontak Orang Tua / Wali</h6>
+              <div class="row">
+                <div class="col-md-6 mb-3">
+                  <label class="form-label small fw-bold text-secondary">Nama Wali Murid</label>
+                  <input type="text" id="e-wali" class="form-control bg-light border-0 py-2">
+                </div>
+                <div class="col-md-6 mb-3">
+                  <label class="form-label small fw-bold text-secondary">No. HP Wali (WhatsApp)</label>
+                  <input type="text" id="e-hp-wali" class="form-control bg-light border-0 py-2">
+                </div>
+              </div>
+              <div class="row">
+                <div class="col-md-6 mb-3">
+                  <label class="form-label small fw-bold text-secondary">Email Wali</label>
+                  <input type="email" id="e-email-wali" class="form-control bg-light border-0 py-2">
+                </div>
+                <div class="col-md-6 mb-3">
+                  <label class="form-label small fw-bold text-secondary">Telegram Chat ID Wali</label>
+                  <input type="text" id="e-tele-wali" class="form-control bg-light border-0 py-2">
+                </div>
+              </div>
+
+            </div>
+            <div class="modal-footer border-0 px-4 pb-4">
+              <button type="button" class="btn btn-light fw-medium py-2 px-3" data-bs-dismiss="modal">Batal</button>
+              <button type="submit" id="btn-update-siswa" class="btn btn-warning fw-bold text-dark py-2 px-4 shadow-sm">Simpan Perubahan</button>
+            </div>
+          </form>
+        </div>
+      </div>
+    </div>
+	
+	<!-- MODAL CETAK KARTU MASSAL -->
+    <div class="modal fade" id="modalCetakMassal" tabindex="-1" aria-hidden="true">
+      <div class="modal-dialog modal-dialog-centered">
+        <div class="modal-content border-0 shadow-lg" style="border-radius: 16px;">
+          <div class="modal-header border-0 pt-4 px-4">
+            <h5 class="modal-title fw-bold text-dark"><i class="fa-solid fa-print text-success me-2"></i>Cetak Kartu Massal</h5>
+            <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+          </div>
+          <div class="modal-body px-4 pb-4">
+            <div class="alert alert-info small mb-4">
+              <i class="fa-solid fa-circle-info me-2"></i>
+              Sistem akan menyusun kartu secara otomatis agar pas jika pilihan <strong>Ukuran Kertas / Media</strong> dipilih <strong>Kertas A4</strong>. Gunakan kertas tebal (Buffalo/Art Carton).
+            </div>
+            <div class="mb-3">
+              <label class="form-label small fw-bold text-secondary">Pilih Target Cetak</label>
+              <select id="opsi-cetak-massal" class="form-select bg-light border-0 py-2">
+                <option value="SEMUA">Semua Siswa Aktif (Seluruh Kelas)</option>
+                <!-- Opsi kelas akan diisi otomatis oleh JavaScript -->
+              </select>
+            </div>
+			<div class="mb-3">
+              <label class="form-label small fw-bold text-secondary">Ukuran Kertas / Media</label>
+              <select id="opsi-ukuran-kertas" class="form-select bg-light border-0 py-2">
+                <option value="A4">Kertas A4</option>
+                <option value="PVC">ID Card PVC</option>
+              </select>
+            </div>
+          </div>
+          <div class="modal-footer border-0 px-4 pb-4">
+            <button type="button" class="btn btn-light fw-medium py-2 px-3" data-bs-dismiss="modal">Batal</button>
+            <button type="button" class="btn btn-success fw-bold py-2 px-4 shadow-sm" onclick="eksekusiCetakMassal()">
+              <i class="fa-solid fa-print me-2"></i>Mulai Cetak
+            </button>
+          </div>
+        </div>
+      </div>
+    </div>
+	
+	<!-- MODAL TAMBAH GURU -->
+    <div class="modal fade" id="modalTambahGuru" data-bs-backdrop="static" tabindex="-1" aria-hidden="true">
+      <div class="modal-dialog modal-dialog-centered">
+        <div class="modal-content border-0 shadow-lg" style="border-radius: 16px;">
+          <div class="modal-header border-0 pt-4 px-4">
+            <h5 class="modal-title fw-bold text-dark"><i class="fa-solid fa-chalkboard-user text-primary me-2"></i>Tambah Guru</h5>
+            <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+          </div>
+          <form id="form-tambah-guru">
+            <div class="modal-body px-4 pb-4">
+			  <div class="mb-3">
+                <label class="form-label small fw-bold text-secondary">NIK</label>
+                <input type="text" id="g-nik" class="form-control bg-light border-0 py-2" required>
+              </div>
+              <div class="mb-3">
+                <label class="form-label small fw-bold text-secondary">NIP</label>
+                <input type="text" id="g-nip" class="form-control bg-light border-0 py-2">
+              </div>
+              <div class="mb-3">
+                <label class="form-label small fw-bold text-secondary">Nama Lengkap (Beserta Gelar)</label>
+                <input type="text" id="g-nama" class="form-control bg-light border-0 py-2" required>
+              </div>
+			  <div class="mb-3">
+				  <label class="form-label small fw-bold text-secondary">Status Guru</label>
+				  <select id="g-status" class="form-select bg-light border-0 py-2" required>
+					<option value="Aktif">Aktif</option>
+					<option value="Pindah">Pindah Tugas</option>
+					<option value="Pensiun">Pensiun</option>
+					<option value="Meninggal">Meninggal</option>
+					<option value="Diberhentikan">Diberhentikan</option>
+				  </select>
+				</div>
+              <div class="mb-3">
+                <label class="form-label small fw-bold text-secondary">Apakah Wali Kelas?</label>
+                <select id="g-is-wali" class="form-select bg-light border-0 py-2" required>
+                  <option value="Bukan">Bukan</option>
+                  <option value="Ya">Ya</option>
+                </select>
+              </div>
+              <div class="mb-3" id="g-rombel-container" style="display: none;">
+                <label class="form-label small fw-bold text-secondary">Wali Kelas Untuk Rombel</label>
+                <select id="g-rombel" class="form-select bg-light border-0 py-2">
+                  <option value="" disabled selected>Memuat data kelas...</option>
+                </select>
+              </div>
+            </div>
+            <div class="modal-footer border-0 px-4 pb-4">
+              <button type="button" class="btn btn-light fw-medium py-2 px-3" data-bs-dismiss="modal">Batal</button>
+              <button type="submit" id="btn-simpan-guru" class="btn btn-primary fw-bold py-2 px-4 shadow-sm">Simpan</button>
+            </div>
+          </form>
+        </div>
+      </div>
+    </div>
+
+    <!-- MODAL EDIT GURU -->
+    <div class="modal fade" id="modalEditGuru" data-bs-backdrop="static" tabindex="-1" aria-hidden="true">
+      <div class="modal-dialog modal-dialog-centered">
+        <div class="modal-content border-0 shadow-lg" style="border-radius: 16px;">
+          <div class="modal-header border-0 pt-4 px-4">
+            <h5 class="modal-title fw-bold text-dark"><i class="fa-solid fa-pen text-warning me-2"></i>Edit Data Guru</h5>
+            <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+          </div>
+          <form id="form-edit-guru">
+            <input type="hidden" id="edit-id-guru">
+            <div class="modal-body px-4 pb-4">
+              <div class="mb-3">
+                <label class="form-label small fw-bold text-secondary">NIK</label>
+                <input type="text" id="eg-nik" class="form-control bg-light border-0 py-2" required>
+              </div>
+			  <div class="mb-3">
+                <label class="form-label small fw-bold text-secondary">NIP</label>
+                <input type="text" id="eg-nip" class="form-control bg-light border-0 py-2">
+              </div>
+              <div class="mb-3">
+                <label class="form-label small fw-bold text-secondary">Nama Lengkap (Beserta Gelar)</label>
+                <input type="text" id="eg-nama" class="form-control bg-light border-0 py-2" required>
+              </div>
+			  <div class="mb-3">
+				  <label class="form-label small fw-bold text-secondary">Status Guru</label>
+				  <select id="eg-status" class="form-select bg-light border-0 py-2" required>
+					<option value="Aktif">Aktif</option>
+					<option value="Pindah">Pindah Tugas</option>
+					<option value="Pensiun">Pensiun</option>
+					<option value="Meninggal">Meninggal</option>
+					<option value="Diberhentikan">Diberhentikan</option>
+				  </select>
+				</div>
+              <div class="mb-3">
+                <label class="form-label small fw-bold text-secondary">Apakah Wali Kelas?</label>
+                <select id="eg-is-wali" class="form-select bg-light border-0 py-2" required>
+                  <option value="Bukan">Bukan</option>
+                  <option value="Ya">Ya</option>
+                </select>
+              </div>
+              <div class="mb-3" id="eg-rombel-container" style="display: none;">
+                <label class="form-label small fw-bold text-secondary">Wali Kelas Untuk Rombel</label>
+                <select id="eg-rombel" class="form-select bg-light border-0 py-2">
+                  <option value="" disabled selected>Memuat data kelas...</option>
+                </select>
+              </div>
+            </div>
+            <div class="modal-footer border-0 px-4 pb-4">
+              <button type="button" class="btn btn-light fw-medium py-2 px-3" data-bs-dismiss="modal">Batal</button>
+              <button type="submit" id="btn-update-guru" class="btn btn-warning fw-bold text-dark py-2 px-4 shadow-sm">Update</button>
+            </div>
+          </form>
+        </div>
+      </div>
+    </div>
+	
+	<!-- MODAL INTERVENSI WALI KELAS -->
+    <div class="modal fade" id="modalIntervensi" data-bs-backdrop="static" tabindex="-1" aria-hidden="true">
+      <div class="modal-dialog modal-dialog-centered">
+        <div class="modal-content border-0 shadow-lg" style="border-radius: 16px;">
+          <div class="modal-header border-0 pt-4 px-4">
+            <h5 class="modal-title fw-bold text-dark"><i class="fa-solid fa-user-shield text-primary me-2"></i>Intervensi Kehadiran</h5>
+            <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+          </div>
+          <form id="form-intervensi">
+            <input type="hidden" id="int-nis">
+            <div class="modal-body px-4 pb-4">
+              <div class="alert alert-light border mb-4">
+                <div class="small text-muted mb-1">Nama Siswa:</div>
+                <div class="fw-bold text-dark" id="int-nama-siswa">-</div>
+              </div>
+              
+              <div class="mb-3">
+                <label class="form-label small fw-bold text-secondary">Ubah Status Menjadi</label>
+                <select id="int-status" class="form-select bg-light border-0 py-2" required>
+                  <option value="Hadir">Hadir (Lupa Scan)</option>
+                  <option value="Sakit">Sakit</option>
+                  <option value="Izin">Izin</option>
+                  <option value="Alpa">Alpa (Tanpa Keterangan)</option>
+                </select>
+              </div>
+              <div class="mb-3">
+                <label class="form-label small fw-bold text-secondary">Keterangan / Alasan</label>
+                <textarea id="int-keterangan" class="form-control bg-light border-0 py-2" rows="2" placeholder="Contoh: Surat dokter menyusul besok" required></textarea>
+              </div>
+            </div>
+            <div class="modal-footer border-0 px-4 pb-4">
+              <button type="button" class="btn btn-light fw-medium py-2 px-3" data-bs-dismiss="modal">Batal</button>
+              <button type="submit" id="btn-simpan-intervensi" class="btn btn-primary fw-bold py-2 px-4 shadow-sm">Simpan Perubahan</button>
+            </div>
+          </form>
+        </div>
+      </div>
+    </div>
+	
+	<!-- MODAL TAMBAH USER -->
+    <div class="modal fade" id="modalTambahUser" data-bs-backdrop="static" tabindex="-1" aria-hidden="true">
+      <div class="modal-dialog modal-dialog-centered">
+        <div class="modal-content border-0 shadow-lg" style="border-radius: 16px;">
+          <div class="modal-header border-0 pt-4 px-4">
+            <h5 class="modal-title fw-bold text-dark"><i class="fa-solid fa-user-plus text-info me-2"></i>Buat Akun Baru</h5>
+            <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+          </div>
+          <form id="form-tambah-user">
+            <div class="modal-body px-4 pb-4">
+              <div class="mb-3">
+                <label class="form-label small fw-bold text-secondary">Username</label>
+                <input type="text" id="u-username" class="form-control bg-light border-0 py-2" placeholder="Tanpa spasi" required>
+              </div>
+              <div class="mb-3">
+                <label class="form-label small fw-bold text-secondary">Password</label>
+                <input type="password" id="u-password" class="form-control bg-light border-0 py-2" placeholder="Minimal 6 karakter" required minlength="6">
+              </div>
+			  <div class="mb-3">
+                <label class="form-label small fw-bold text-secondary">Tautkan Akun Google (Opsional)</label>
+                <input type="email" id="u-email-google" class="form-control bg-light border-0 py-2" placeholder="contoh@belajar.id">
+                <div class="form-text small">Jika diisi, user bisa login menggunakan tombol Google.</div>
+              </div>
+              <div class="mb-3">
+                <label class="form-label small fw-bold text-secondary">Hak Akses (Role)</label>
+                <select id="u-role" class="form-select bg-light border-0 py-2" required>
+                  <option value="" disabled selected>Pilih Role</option>
+                  <option value="Admin">Admin</option>
+                  <option value="Kepsek">Kepala Sekolah</option>
+                  <option value="Guru">Guru</option>
+                </select>
+              </div>
+              <div class="mb-3" id="u-relasi-container" style="display: none;">
+                <label class="form-label small fw-bold text-secondary">Tautkan ke Data Guru</label>
+                <select id="u-relasi" class="form-select bg-light border-0 py-2">
+                  <option value="" disabled selected>Memuat data guru...</option>
+                </select>
+                <div class="form-text small text-danger mt-1"><i class="fa-solid fa-triangle-exclamation me-1"></i>Wajib ditautkan agar sistem mengenali identitas guru saat login.</div>
+              </div>
+            </div>
+            <div class="modal-footer border-0 px-4 pb-4">
+              <button type="button" class="btn btn-light fw-medium py-2 px-3" data-bs-dismiss="modal">Batal</button>
+              <button type="submit" id="btn-simpan-user" class="btn btn-info fw-bold text-white py-2 px-4 shadow-sm">Buat Akun</button>
+            </div>
+          </form>
+        </div>
+      </div>
+    </div>
+	
+	<!-- MODAL EDIT USER -->
+    <div class="modal fade" id="modalEditUser" data-bs-backdrop="static" tabindex="-1" aria-hidden="true">
+      <div class="modal-dialog modal-dialog-centered">
+        <div class="modal-content border-0 shadow-lg" style="border-radius: 16px;">
+          <div class="modal-header border-0 pt-4 px-4">
+            <h5 class="modal-title fw-bold text-dark"><i class="fa-solid fa-user-pen text-warning me-2"></i>Edit Pengguna</h5>
+            <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+          </div>
+          <form id="form-edit-user">
+            <input type="hidden" id="eu-id-user">
+            <div class="modal-body px-4 pb-4">
+              <div class="mb-3">
+                <label class="form-label small fw-bold text-secondary">Username</label>
+                <input type="text" id="eu-username" class="form-control bg-light border-0 py-2" readonly disabled>
+              </div>
+			  <div class="mb-3">
+                <label class="form-label small fw-bold text-secondary">Password Baru</label>
+                <input type="password" id="eu-password" class="form-control bg-light border-0 py-2" placeholder="Kosongkan jika tidak ingin mengubah password">
+              </div>
+			  <div class="mb-3">
+                <label class="form-label small fw-bold text-secondary">Tautkan Akun Google (Opsional)</label>
+                <input type="email" id="eu-email-google" class="form-control bg-light border-0 py-2" placeholder="contoh@belajar.id">
+                <div class="form-text small">Jika diisi, user bisa login menggunakan tombol Google.</div>
+              </div>
+			  <div class="mb-3">
+				  <label class="form-label small fw-bold text-secondary">Hak Akses (Role)</label>
+				  <select id="eu-role" class="form-select bg-light border-0 py-2" required>
+					  <option value="Admin">Admin</option>
+					  <option value="Kepsek">Kepala Sekolah</option>
+					  <option value="Guru">Guru</option>
+				  </select>
+			  </div>
+              <div class="mb-3" id="eu-relasi-container" style="display: none;">
+                <label class="form-label small fw-bold text-secondary">Tautkan ke Data Guru</label>
+                <select id="eu-relasi" class="form-select bg-light border-0 py-2"></select>
+              </div>
+            </div>
+            <div class="modal-footer border-0 px-4 pb-4">
+              <button type="button" class="btn btn-light fw-medium py-2 px-3" data-bs-dismiss="modal">Batal</button>
+              <button type="submit" id="btn-update-user" class="btn btn-warning fw-bold text-dark py-2 px-4 shadow-sm">Simpan Perubahan</button>
+            </div>
+          </form>
+        </div>
+      </div>
+    </div>
+	
+	<!-- MODAL UBAH PASSWORD SENDIRI -->
+	<div class="modal fade" id="modalUbahPassword" tabindex="-1" aria-hidden="true">
+	  <div class="modal-dialog modal-dialog-centered">
+		<div class="modal-content border-0 shadow-lg" style="border-radius: 16px;">
+		  <div class="modal-header border-0 pt-4 px-4">
+			<h5 class="modal-title fw-bold text-dark"><i class="fa-solid fa-key text-warning me-2"></i>Ubah Password</h5>
+			<button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+		  </div>
+		  <form id="form-ubah-password">
+			<div class="modal-body px-4 pb-4">
+			  <div class="alert alert-info small mb-4 border-0">
+				<i class="fa-solid fa-circle-info me-1"></i> Setelah password diubah, Anda akan otomatis dikeluarkan (logout) dan harus masuk kembali.
+			  </div>
+			  <div class="mb-3">
+				<label class="form-label small fw-bold text-secondary">Password Baru</label>
+				<input type="password" id="up-password-baru" class="form-control bg-light border-0 py-2" placeholder="Minimal 6 karakter" required minlength="6">
+			  </div>
+			  <div class="mb-3">
+				<label class="form-label small fw-bold text-secondary">Konfirmasi Password Baru</label>
+				<input type="password" id="up-password-konfirm" class="form-control bg-light border-0 py-2" placeholder="Ketik ulang password baru" required minlength="6">
+			  </div>
+			</div>
+			<div class="modal-footer border-0 px-4 pb-4">
+			  <button type="button" class="btn btn-light fw-medium py-2 px-3" data-bs-dismiss="modal">Batal</button>
+			  <button type="submit" id="btn-simpan-password" class="btn btn-warning fw-bold text-dark py-2 px-4 shadow-sm">Simpan Password</button>
+			</div>
+		  </form>
+		</div>
+	  </div>
+	</div>
+	
+	<!-- MODAL EDIT JURNAL & PRESENSI -->
+    <div class="modal fade" id="modalEditJurnal" data-bs-backdrop="static" tabindex="-1" aria-hidden="true">
+      <div class="modal-dialog modal-dialog-centered modal-lg">
+        <div class="modal-content border-0 shadow-lg" style="border-radius: 16px;">
+          <div class="modal-header border-0 pt-4 px-4">
+            <h5 class="modal-title fw-bold text-dark"><i class="fa-solid fa-pen-to-square text-warning me-2"></i>Edit Jurnal & Presensi</h5>
+            <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+          </div>
+          <form id="form-edit-jurnal">
+            <input type="hidden" id="ej-id-sesi">
+            <input type="hidden" id="ej-kelas">
+            
+            <div class="modal-body px-4 pb-4" style="max-height: 70vh; overflow-y: auto;">
+              <div class="row mb-3">
+                <div class="col-md-6">
+                  <label class="form-label small fw-bold text-secondary">Tanggal Jurnal</label>
+                  <input type="date" id="ej-tanggal" class="form-control bg-light border-0 py-2" required>
+                </div>
+                <div class="col-md-6">
+                  <label class="form-label small fw-bold text-secondary">Kelas</label>
+                  <input type="text" id="ej-kelas-display" class="form-control bg-light border-0 py-2" readonly disabled>
+                </div>
+              </div>
+              
+              <div class="row mb-3">
+                <div class="col-md-6">
+                  <label class="form-label small fw-bold text-secondary">Mata Pelajaran</label>
+                  <input type="text" id="ej-mapel" class="form-control bg-light border-0 py-2" required>
+                </div>
+                <div class="col-md-6">
+                  <label class="form-label small fw-bold text-secondary">Jam Pelajaran Ke-</label>
+                  <input type="text" id="ej-jam" class="form-control bg-light border-0 py-2" required>
+                </div>
+              </div>
+              
+              <div class="mb-4">
+                <label class="form-label small fw-bold text-secondary">Topik / Materi Pembelajaran</label>
+                <textarea id="ej-topik" class="form-control bg-light border-0 py-2" rows="2" required></textarea>
+              </div>
+
+              <h6 class="fw-bold text-primary mb-3 border-bottom pb-2"><i class="fa-solid fa-users me-2"></i>Edit Presensi Siswa</h6>
+              <div class="table-responsive">
+                <table class="table table-hover align-middle mb-0">
+                  <thead class="table-light">
+                    <tr><th width="5%">No</th><th width="45%">Nama Siswa</th><th width="50%" class="text-center">Status Kehadiran</th></tr>
+                  </thead>
+                  <tbody id="tbody-edit-absen">
+                    <!-- Baris absen akan di-generate oleh JavaScript -->
+                  </tbody>
+                </table>
+              </div>
+            </div>
+            <div class="modal-footer border-0 px-4 pb-4">
+              <button type="button" class="btn btn-light fw-medium py-2 px-3" data-bs-dismiss="modal">Batal</button>
+              <button type="submit" id="btn-update-jurnal" class="btn btn-warning fw-bold text-dark py-2 px-4 shadow-sm">Simpan Perubahan</button>
+            </div>
+          </form>
+        </div>
+      </div>
+    </div>
+	
+	<!-- MODAL HUBUNGI WALI MURID -->
+    <div class="modal fade" id="modalHubungiWali" tabindex="-1" aria-hidden="true">
+      <div class="modal-dialog modal-dialog-centered">
+        <div class="modal-content border-0 shadow-lg" style="border-radius: 16px;">
+          <div class="modal-header border-0 pt-4 px-4">
+            <h5 class="modal-title fw-bold text-dark"><i class="fa-solid fa-bullhorn text-primary me-2"></i>Kirim Notifikasi</h5>
+            <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+          </div>
+          <div class="modal-body px-4 pb-4 text-center">
+            <p class="text-muted small mb-4">Pilih metode pengiriman laporan kehadiran harian untuk <strong id="notif-nama-siswa" class="text-dark">Siswa</strong>.</p>
+            
+            <input type="hidden" id="notif-nis">
+            <input type="hidden" id="notif-status">
+            <input type="hidden" id="notif-tanggal">
+            <input type="hidden" id="notif-nohp">
+            
+            <div class="d-grid gap-3">
+              <!-- Tombol WhatsApp -->
+              <button class="btn btn-success fw-bold py-3 shadow-sm" onclick="kirimNotifWA()">
+                <i class="fa-brands fa-whatsapp fa-lg me-2"></i> Kirim via WhatsApp
+              </button>
+              
+              <!-- Tombol Email -->
+              <button class="btn btn-danger fw-bold py-3 shadow-sm" id="btn-notif-email" onclick="kirimNotifEmail()">
+                <i class="fa-solid fa-envelope fa-lg me-2"></i> Kirim via Email Otomatis
+              </button>
+            </div>
+            
+            <div class="alert alert-light border mt-4 mb-0 small text-start">
+              <i class="fa-solid fa-circle-info text-info me-1"></i> <strong>Info WA:</strong> Sistem akan membuka aplikasi WhatsApp Anda dengan pesan yang sudah terketik otomatis.
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"></script>
+    <script src="https://unpkg.com/html5-qrcode" type="text/javascript"></script>
+	<script src="https://cdn.jsdelivr.net/npm/simple-datatables@latest" type="text/javascript"></script>
+	<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+	<script src="https://cdn.jsdelivr.net/npm/xlsx@0.18.5/dist/xlsx.full.min.js"></script>
+	<script src="https://accounts.google.com/gsi/client" async defer></script>
+    <script src="app.js"></script>
+  </body>
+</html>
