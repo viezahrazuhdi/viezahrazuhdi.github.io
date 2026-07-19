@@ -3,7 +3,7 @@
    ========================================== */
 
 /* GANTI DENGAN URL WEB APP DEPLOYMENT BARU ANDA */
-const API_URL = "https://script.google.com/macros/s/AKfycbwRTZf8JHY5b3eECOMhl6m4uXFUxMqdz_S2DC-8xNman3e26yARvyi5Ya9DzLD6u_ZCxw/exec"; 
+const API_URL = "https://script.google.com/macros/s/AKfycbzAmJjD1U2nJGAOd7Uqyt1uGyclAtJZPqRXjYIYE9gPCPCeFHSCbXzEFRZBDYf2YF8npA/exec"; 
 
 /**
  * Fungsi utama untuk memanggil Backend GAS.
