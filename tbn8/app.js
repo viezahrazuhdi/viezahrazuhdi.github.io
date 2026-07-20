@@ -2404,7 +2404,7 @@ async function bukaModalEditJurnal(idSesi) {
   document.getElementById('ej-mapel').value = jurnal.mapel;
   document.getElementById('ej-jam').value = jurnal.jam;
   document.getElementById('ej-topik').value = jurnal.topik;
-	document.getElementById('ej-catatan').value = jurnal.catatan;
+  document.getElementById('ej-catatan').value = jurnal.catatan;
 
   const tbody = document.getElementById('tbody-edit-absen');
   tbody.innerHTML = '<tr><td colspan="3" class="text-center py-4"><div class="spinner-border text-primary spinner-border-sm me-2"></div>Memuat data siswa...</td></tr>';
