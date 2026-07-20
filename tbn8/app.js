@@ -2614,7 +2614,7 @@ async function cetakJurnalMengajar() {
   htmlPrint += '</div>';
 
   htmlPrint += '<table><thead>';
-  htmlPrint += '<tr><th width="5%">No</th><th width="15%">Hari, Tanggal</th><th width="10%">Kelas</th><th width="15%">Mapel (Jam)</th><th width="25%">Topik</th><th width="10%">Catatan</th><th width="20%">Presensi Siswa</th></tr>';
+  htmlPrint += '<tr><th width="5%">No</th><th width="15%">Hari, Tanggal</th><th width="10%">Kelas</th><th width="15%">Mapel (Jam)</th><th width="20%">Topik</th><th width="20%">Catatan</th><th width="15%">Presensi Siswa</th></tr>';
   htmlPrint += '</thead><tbody>';
 
   for (let i = 0; i < dataCetak.length; i++) {
