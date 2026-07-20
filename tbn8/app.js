@@ -2489,6 +2489,7 @@ document.addEventListener("DOMContentLoaded", function() {
         mata_pelajaran: document.getElementById('ej-mapel').value,
         jam_pelajaran: document.getElementById('ej-jam').value,
         topik_jurnal: document.getElementById('ej-topik').value,
+		catatan: document.getElementById('ej-catatan').value,
         data_absen: dataAbsenArray
       };
 
