@@ -726,8 +726,8 @@ function renderIsiTabelSiswa(dataArray) {
 function downloadTemplateExcel() {
   /* 1. Buat array data dengan 3 Baris: Header, Petunjuk, dan Data Dummy */
   const templateData = [
-    ["NISN", "NIS", "Nama Lengkap", "NIK", "Jenis Kelamin (L/P)", "Tempat Lahir", "Tanggal Lahir (YYYY-MM-DD)", "Alamat Lengkap", "Gol Darah", "Tingkat Kelas (X/XI/XII)", "Rombel Kelas", "Nama Wali", "No HP Wali", "Email Wali"],
-    ["(WAJIB) Format Teks", "(WAJIB) Unik", "(WAJIB) Sesuai Ijazah", "(WAJIB) Sesuai KK", "(WAJIB) L atau P", "(Opsional)", "(Opsional) YYYY-MM-DD", "(Opsional)", "(Opsional) -/A/B/AB/O", "(WAJIB) X/XI/XII", "(WAJIB) Cth: PPLG 1", "(Opsional)", "(Opsional) Format Teks", "(Opsional)"],
+    ["NISN", "NIS", "Nama Lengkap", "NIK", "Jenis Kelamin (L/P)", "Tempat Lahir", "Tanggal Lahir (YYYY-MM-DD)", "Alamat Lengkap", "Gol Darah", "Tingkat Kelas (7/8/9)", "Rombel Kelas", "Nama Wali", "No HP Wali", "Email Wali"],
+    ["Format Teks", "(WAJIB) Unik", "(WAJIB) Sesuai Ijazah", "Sesuai KK", "(WAJIB) L atau P", "(Opsional)", "(Opsional) YYYY-MM-DD", "(Opsional)", "(Opsional) -/A/B/AB/O", "(WAJIB) 7/8/9", "(WAJIB) Cth: PPLG 1", "(Opsional)", "(Opsional) Format Teks", "(Opsional)"],
     ["0056123456", "2425001", "Budi Santoso", "1234567890123456", "L", "Jakarta", "2010-05-15", "Jl. Merdeka No. 1", "O", "X", "PPLG 1", "Bapak Budi", "081234567890", "budi@email.com"]
   ];
 
