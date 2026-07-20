@@ -726,9 +726,9 @@ function renderIsiTabelSiswa(dataArray) {
 function downloadTemplateExcel() {
   /* 1. Buat array data dengan 3 Baris: Header, Petunjuk, dan Data Dummy */
   const templateData = [
-    ["NISN", "NIS", "Nama Lengkap", "NIK", "Jenis Kelamin (L/P)", "Tempat Lahir", "Tanggal Lahir (YYYY-MM-DD)", "Alamat Lengkap", "Gol Darah", "Tingkat Kelas (7/8/9)", "Rombel Kelas", "Nama Wali", "No HP Wali", "Email Wali"],
-    ["Format Teks", "(WAJIB) Unik", "(WAJIB) Sesuai Ijazah", "Sesuai KK", "(WAJIB) L atau P", "(Opsional)", "(Opsional) YYYY-MM-DD", "(Opsional)", "(Opsional) -/A/B/AB/O", "(WAJIB) 7/8/9", "(WAJIB) Cth: PPLG 1", "(Opsional)", "(Opsional) Format Teks", "(Opsional)"],
-    ["0056123456", "2425001", "Budi Santoso", "1234567890123456", "L", "Jakarta", "2010-05-15", "Jl. Merdeka No. 1", "O", "X", "PPLG 1", "Bapak Budi", "081234567890", "budi@email.com"]
+    ["NIS", "NISN", "Nama Lengkap", "NIK", "Jenis Kelamin (L/P)", "Tempat Lahir", "Tanggal Lahir (YYYY-MM-DD)", "Alamat Lengkap", "Gol Darah", "Tingkat Kelas (7/8/9)", "Rombel Kelas", "Nama Wali", "No HP Wali", "Email Wali"],
+    ["(WAJIB) Unik", "Format Teks", "(WAJIB) Sesuai Ijazah", "Sesuai KK", "(WAJIB) L atau P", "(Opsional)", "(Opsional) YYYY-MM-DD", "(Opsional)", "(Opsional) -/A/B/AB/O", "(WAJIB) 7/8/9", "(WAJIB) Cth: PPLG 1", "(Opsional)", "(Opsional) Format Teks", "(Opsional)"],
+    ["2425001", "0056123456", "Budi Santoso", "1234567890123456", "L", "Jakarta", "2010-05-15", "Jl. Merdeka No. 1", "O", "X", "PPLG 1", "Bapak Budi", "081234567890", "budi@email.com"]
   ];
 
   const ws = XLSX.utils.aoa_to_sheet(templateData);
@@ -746,8 +746,8 @@ function downloadTemplateExcel() {
 
   /* 3. ATUR LEBAR KOLOM AGAR RAPI SAAT DIBUKA */
   ws['!cols'] = [
-    { wch: 20 }, /* A: NISN */
-    { wch: 15 }, /* B: NIS */
+    { wch: 15 }, /* A: NIS */
+    { wch: 20 }, /* B: NISN */
     { wch: 25 }, /* C: Nama Lengkap */
 	{ wch: 25 }, /* D: NIK */
     { wch: 18 }, /* E: Jenis Kelamin */
@@ -813,8 +813,8 @@ document.addEventListener("DOMContentLoaded", function() {
 
             payloadSiswa.push({
               baris_excel: i + 1,
-              nisn: (row[0] || "").toString(),
-              nis: (row[1] || "").toString(),
+			  nis: (row[0] || "").toString(),
+              nisn: (row[1] || "").toString(),
               nama_lengkap: row[2] || "",
 			  NIK: row[3] || "",
               jenis_kelamin: row[4] || "L",
@@ -822,7 +822,7 @@ document.addEventListener("DOMContentLoaded", function() {
               tanggal_lahir: tglLahir,
               alamat_lengkap: row[7] || "",
               gol_darah: row[8] || "-",
-              tingkat_kelas: row[9] || "",
+              tingkat_kelas: (row[9] || "").toString(),
               rombel_kelas: (row[10] || "").toString(),
               nama_wali_murid: row[11] || "",
               no_hp_wali: (row[12] || "").toString(),
@@ -918,8 +918,8 @@ function initFormTambahSiswa() {
 
       /* Pembangunan Objek Payload Siswa Lengkap */
       const payloadSiswa = {
-        nisn: document.getElementById('p-nisn').value,
         nis: document.getElementById('p-nis').value,
+		nisn: document.getElementById('p-nisn').value,
         nama_lengkap: document.getElementById('p-nama').value,
 		nik: document.getElementById('p-nik').value,
 		jenis_kelamin: document.getElementById('p-jk').value,
@@ -974,8 +974,8 @@ function bukaModalEditSiswa(idSiswa) {
   /* Isi data ke elemen form edit di Index.html */
   document.getElementById('edit-id-siswa').value = siswa.id_siswa;
   document.getElementById('e-foto-lama').value = siswa.url_foto || '';
-  document.getElementById('e-nisn').value = siswa.nisn;
   document.getElementById('e-nis').value = siswa.nis;
+  document.getElementById('e-nisn').value = siswa.nisn;
   document.getElementById('e-nama').value = siswa.nama_lengkap;
   document.getElementById('e-nik').value = siswa.nik;
   document.getElementById('e-jk').value = siswa.jenis_kelamin || 'L';
@@ -1041,8 +1041,8 @@ function initFormEditSiswa() {
 
       const idSiswa = document.getElementById('edit-id-siswa').value;
       const payloadUpdate = {
+		nis: document.getElementById('e-nis').value,
         nisn: document.getElementById('e-nisn').value,
-        nis: document.getElementById('e-nis').value,
         nama_lengkap: document.getElementById('e-nama').value,
 		nik: document.getElementById('e-nik').value,
 		jenis_kelamin: document.getElementById('e-jk').value,
