@@ -975,9 +975,9 @@ function bukaModalEditSiswa(idSiswa) {
   document.getElementById('edit-id-siswa').value = siswa.id_siswa;
   document.getElementById('e-foto-lama').value = siswa.url_foto || '';
   document.getElementById('e-nis').value = siswa.nis;
-  document.getElementById('e-nisn').value = siswa.nisn;
+  document.getElementById('e-nisn').value = siswa.nisn??'';
   document.getElementById('e-nama').value = siswa.nama_lengkap;
-  document.getElementById('e-nik').value = siswa.nik;
+  document.getElementById('e-nik').value = siswa.nik??'';
   document.getElementById('e-jk').value = siswa.jenis_kelamin || 'L';
   document.getElementById('e-status').value = siswa.status_siswa;
   document.getElementById('e-tingkat').value = siswa.tingkat_kelas;
@@ -1170,8 +1170,8 @@ async function eksekusiCetakKartu(idSiswa) {
   htmlPrint += '<img class="k-foto" src="' + fotoSiswa + '" alt="Foto">';
   htmlPrint += '<div class="k-nama">' + s.nama_lengkap + '</div>';
   htmlPrint += '<div class="k-teks">NIPD: ' + s.nis + '</div>';
-  htmlPrint += '<div class="k-teks">NISN: ' + s.nisn + '</div>';
-  htmlPrint += '<div class="k-teks">NIK: ' + s.nik + '</div>';
+  htmlPrint += '<div class="k-teks">NISN: ' + s.nisn??'' + '</div>';
+  htmlPrint += '<div class="k-teks">NIK: ' + s.nik??'' + '</div>';
   htmlPrint += '<div class="k-teks">Jenis Kelamin: ' + (s.jenis_kelamin === 'P' ? 'Perempuan' : 'Laki-laki') + '</div>';
   htmlPrint += '<div class="k-teks">TTL: ' + (s.tempat_lahir || "-") + ', ' + tglLahir + '</div>';
   htmlPrint += '<div class="bottom-info">';
