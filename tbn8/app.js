@@ -2905,9 +2905,9 @@ async function loadDataIntervensi(targetKelas, targetTanggal) {
         tableRows += '<td><span class="badge bg-light text-dark border"><i class="fa-regular fa-clock me-1"></i>' + p.waktu_pulang + '</span></td>';
         tableRows += '<td><span class="badge ' + badgeColor + '">' + p.status_kehadiran + '</span>' + tandaIntervensi + '</td>';
         tableRows += '<td><div class="btn-group font-monospace">';
-        tableRows += '<button class="btn btn-sm btn-primary shadow-sm" title="Ubah Status" onclick="bukaModalIntervensi(\'' + p.nis + '\')"><i class="fa-solid fa-pen-to-square"></i></button>';
+        tableRows += '<button class="btn btn-sm btn-primary shadow-sm" title="Ubah Status" onclick="bukaModalIntervensi(\'' + p.nis + '\', \'' + p.id_siswa + '\')"><i class="fa-solid fa-pen-to-square"></i></button>';
         
-        let dataLengkap = window.allSiswa.find(function(s) { return s.nis.toString() === p.nis.toString(); });
+        let dataLengkap = window.allSiswa.find(function(s) { return s.id_siswa.toString() === p.id_siswa.toString(); });
         let noHp = dataLengkap ? dataLengkap.no_hp_wali : "";
         
         tableRows += '<button class="btn btn-sm btn-success shadow-sm" title="Hubungi Wali" onclick="bukaModalNotif(\'' + p.nis + '\', \'' + p.nama_lengkap + '\', \'' + p.status_kehadiran + '\', \'' + noHp + '\')"><i class="fa-brands fa-whatsapp"></i></button>';
@@ -2923,18 +2923,19 @@ async function loadDataIntervensi(targetKelas, targetTanggal) {
   }
 }
 
-function bukaModalIntervensi(nisSiswa) {
-  const dataSiswa = window.presensiKelasHariIni.find(function(s) { return s.nis.toString() === nisSiswa.toString(); });
+function bukaModalIntervensi(idSiswa) {
+  const dataSiswa = window.presensiKelasHariIni.find(function(s) { return s.id_siswa.toString() === idSiswa.toString(); });
   if(!dataSiswa) return;
 
   document.getElementById('int-nis').value = dataSiswa.nis;
+  document.getElementById('int-id').value = dataSiswa.id_siswa;
   document.getElementById('int-nama-siswa').innerText = dataSiswa.nama_lengkap;
   
   const statusSelect = document.getElementById('int-status');
-  if (dataSiswa.status_kehadiran === 'Sakit' || dataSiswa.status_kehadiran === 'Izin' || dataSiswa.status_kehadiran === 'Alpa') {
+  if (dataSiswa.status_kehadiran === 'S' || dataSiswa.status_kehadiran === 'I' || dataSiswa.status_kehadiran === 'A') {
     statusSelect.value = dataSiswa.status_kehadiran;
   } else {
-    statusSelect.value = 'Hadir';
+    statusSelect.value = 'H';
   }
 
   document.getElementById('int-keterangan').value = dataSiswa.keterangan_wali || '';
@@ -2952,6 +2953,7 @@ document.addEventListener("DOMContentLoaded", function() {
       btn.disabled = true; btn.innerHTML = 'Menyimpan...';
 
       const payload = {
+		idSiswa: document.getElementById('int-id').value,
         nis: document.getElementById('int-nis').value,
         status_baru: document.getElementById('int-status').value,
         keterangan: document.getElementById('int-keterangan').value
