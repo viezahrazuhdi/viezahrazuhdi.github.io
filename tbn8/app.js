@@ -2711,22 +2711,26 @@ async function loadSiswaUntukAbsen(namaKelas) {
       rowsHtml += '<td class="text-center">';
       rowsHtml += '<div class="btn-group shadow-sm" role="group">';
       
-      let chkH = statusDef === 'Hadir' ? 'checked' : '';
-      let chkS = statusDef === 'Sakit' ? 'checked' : '';
-      let chkI = statusDef === 'Izin' ? 'checked' : '';
-      let chkA = statusDef === 'Alpa' ? 'checked' : '';
+      let chkH = statusDef === 'H' ? 'checked' : '';
+	  let chkT = statusDef === 'T' ? 'checked' : '';
+      let chkS = statusDef === 'S' ? 'checked' : '';
+      let chkI = statusDef === 'I' ? 'checked' : '';
+      let chkA = statusDef === 'A' ? 'checked' : '';
       
-      rowsHtml += '<input type="radio" class="btn-check radio-absen" name="absen_' + s.nis + '" id="h_' + s.nis + '" value="Hadir" data-nis="' + s.nis + '" ' + chkH + '>';
-      rowsHtml += '<label class="btn btn-outline-success btn-sm px-3" for="h_' + s.nis + '">H</label>';
+      rowsHtml += '<input type="radio" class="btn-check radio-absen" name="absen_' + s.id_siswa + '" id="h_' + s.id_siswa + '" value="H" data-id="' + s.id_siswa + '" ' + chkH + '>';
+      rowsHtml += '<label class="btn btn-outline-success btn-sm px-3" for="h_' + s.id_siswa + '">H</label>';
+
+	  rowsHtml += '<input type="radio" class="btn-check radio-absen" name="absen_' + s.id_siswa + '" id="t_' + s.id_siswa + '" value="T" data-id="' + s.id_siswa + '" ' + chkT + '>';
+      rowsHtml += '<label class="btn btn-outline-secondary btn-sm px-3" for="t_' + s.id_siswa + '">T</label>';
       
-      rowsHtml += '<input type="radio" class="btn-check radio-absen" name="absen_' + s.nis + '" id="s_' + s.nis + '" value="Sakit" data-nis="' + s.nis + '" ' + chkS + '>';
-      rowsHtml += '<label class="btn btn-outline-warning btn-sm px-3" for="s_' + s.nis + '">S</label>';
+      rowsHtml += '<input type="radio" class="btn-check radio-absen" name="absen_' + s.id_siswa + '" id="s_' + s.id_siswa + '" value="S" data-id="' + s.id_siswa + '" ' + chkS + '>';
+      rowsHtml += '<label class="btn btn-outline-warning btn-sm px-3" for="s_' + s.id_siswa + '">S</label>';
       
-      rowsHtml += '<input type="radio" class="btn-check radio-absen" name="absen_' + s.nis + '" id="i_' + s.nis + '" value="Izin" data-nis="' + s.nis + '" ' + chkI + '>';
-      rowsHtml += '<label class="btn btn-outline-info btn-sm px-3" for="i_' + s.nis + '">I</label>';
+      rowsHtml += '<input type="radio" class="btn-check radio-absen" name="absen_' + s.id_siswa + '" id="i_' + s.id_siswa + '" value="I" data-id="' + s.id_siswa + '" ' + chkI + '>';
+      rowsHtml += '<label class="btn btn-outline-info btn-sm px-3" for="i_' + s.id_siswa + '">I</label>';
       
-      rowsHtml += '<input type="radio" class="btn-check radio-absen" name="absen_' + s.nis + '" id="a_' + s.nis + '" value="Alpa" data-nis="' + s.nis + '" ' + chkA + '>';
-      rowsHtml += '<label class="btn btn-outline-danger btn-sm px-3" for="a_' + s.nis + '">A</label>';
+      rowsHtml += '<input type="radio" class="btn-check radio-absen" name="absen_' + s.id_siswa + '" id="a_' + s.id_siswa + '" value="A" data-id="' + s.id_siswa + '" ' + chkA + '>';
+      rowsHtml += '<label class="btn btn-outline-danger btn-sm px-3" for="a_' + s.id_siswa + '">A</label>';
       
       rowsHtml += '</div></td></tr>';
     }
@@ -2754,7 +2758,7 @@ async function prosesSimpanJurnal(e) {
   
   for (let i = 0; i < radioTerpilih.length; i++) {
     dataAbsenArray.push({
-      nis: radioTerpilih[i].getAttribute('data-nis'),
+      id: radioTerpilih[i].getAttribute('data-id'),
       status: radioTerpilih[i].value
     });
   }
