@@ -2437,22 +2437,26 @@ async function bukaModalEditJurnal(idSesi) {
       rowsHtml += '<td class="text-center">';
       rowsHtml += '<div class="btn-group shadow-sm" role="group">';
       
-      let chkH = statusSiswa === 'Hadir' ? 'checked' : '';
-      let chkS = statusSiswa === 'Sakit' ? 'checked' : '';
-      let chkI = statusSiswa === 'Izin' ? 'checked' : '';
-      let chkA = statusSiswa === 'Alpa' ? 'checked' : '';
+      let chkH = statusSiswa === 'H' ? 'checked' : '';
+	  let chkT = statusSiswa === 'T' ? 'checked' : '';
+      let chkS = statusSiswa === 'S' ? 'checked' : '';
+      let chkI = statusSiswa === 'I' ? 'checked' : '';
+      let chkA = statusSiswa === 'A' ? 'checked' : '';
       
-      rowsHtml += '<input type="radio" class="btn-check edit-radio-absen" name="e_absen_' + s.nis + '" id="eh_' + s.nis + '" value="Hadir" data-nis="' + s.nis + '" ' + chkH + '>';
-      rowsHtml += '<label class="btn btn-outline-success btn-sm px-3" for="eh_' + s.nis + '">H</label>';
+      rowsHtml += '<input type="radio" class="btn-check edit-radio-absen" name="e_absen_' + s.id_siswa + '" id="eh_' + s.id_siswa + '" value="H" data-id="' + s.id_siswa + '" ' + chkH + '>';
+      rowsHtml += '<label class="btn btn-outline-success btn-sm px-3" for="eh_' + s.id_siswa + '">H</label>';
+
+	  rowsHtml += '<input type="radio" class="btn-check edit-radio-absen" name="e_absen_' + s.id_siswa + '" id="eh_' + s.id_siswa + '" value="T" data-id="' + s.id_siswa + '" ' + chkT + '>';
+      rowsHtml += '<label class="btn btn-outline-success btn-sm px-3" for="eh_' + s.id_siswa + '">T</label>';
       
-      rowsHtml += '<input type="radio" class="btn-check edit-radio-absen" name="e_absen_' + s.nis + '" id="es_' + s.nis + '" value="Sakit" data-nis="' + s.nis + '" ' + chkS + '>';
-      rowsHtml += '<label class="btn btn-outline-warning btn-sm px-3" for="es_' + s.nis + '">S</label>';
+      rowsHtml += '<input type="radio" class="btn-check edit-radio-absen" name="e_absen_' + s.id_siswa + '" id="es_' + s.id_siswa + '" value="S" data-id="' + s.id_siswa + '" ' + chkS + '>';
+      rowsHtml += '<label class="btn btn-outline-warning btn-sm px-3" for="es_' + s.id_siswa + '">S</label>';
       
-      rowsHtml += '<input type="radio" class="btn-check edit-radio-absen" name="e_absen_' + s.nis + '" id="ei_' + s.nis + '" value="Izin" data-nis="' + s.nis + '" ' + chkI + '>';
-      rowsHtml += '<label class="btn btn-outline-info btn-sm px-3" for="ei_' + s.nis + '">I</label>';
+      rowsHtml += '<input type="radio" class="btn-check edit-radio-absen" name="e_absen_' + s.id_siswa + '" id="ei_' + s.id_siswa + '" value="I" data-id="' + s.id_siswa + '" ' + chkI + '>';
+      rowsHtml += '<label class="btn btn-outline-info btn-sm px-3" for="ei_' + s.id_siswa + '">I</label>';
       
-      rowsHtml += '<input type="radio" class="btn-check edit-radio-absen" name="e_absen_' + s.nis + '" id="ea_' + s.nis + '" value="Alpa" data-nis="' + s.nis + '" ' + chkA + '>';
-      rowsHtml += '<label class="btn btn-outline-danger btn-sm px-3" for="ea_' + s.nis + '">A</label>';
+      rowsHtml += '<input type="radio" class="btn-check edit-radio-absen" name="e_absen_' + s.id_siswa + '" id="ea_' + s.id_siswa + '" value="A" data-id="' + s.id_siswa + '" ' + chkA + '>';
+      rowsHtml += '<label class="btn btn-outline-danger btn-sm px-3" for="ea_' + s.id_siswa + '">A</label>';
       
       rowsHtml += '</div></td></tr>';
     }
@@ -2478,7 +2482,7 @@ document.addEventListener("DOMContentLoaded", function() {
       let dataAbsenArray = [];
       for (let i = 0; i < radioTerpilih.length; i++) {
         dataAbsenArray.push({
-          nis: radioTerpilih[i].getAttribute('data-nis'),
+          id: radioTerpilih[i].getAttribute('data-id'),
           status: radioTerpilih[i].value
         });
       }
