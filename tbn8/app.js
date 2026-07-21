@@ -2955,6 +2955,7 @@ document.addEventListener("DOMContentLoaded", function() {
       const payload = {
 		idSiswa: document.getElementById('int-id').value,
         nis: document.getElementById('int-nis').value,
+		tanggal: document.getElementById('int-filter-tanggal').value,
         status_baru: document.getElementById('int-status').value,
         keterangan: document.getElementById('int-keterangan').value
       };
