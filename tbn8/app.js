@@ -3518,7 +3518,7 @@ async function loadDataLaporan() {
         let r = dataRekap[i];
         tableRows += '<tr>';
         tableRows += '<td>' + (i + 1) + '</td>';
-        tableRows += '<td class="text-start fw-bold">' + r.nama_lengkap + '<br><small class="text-muted fw-normal">' + r.nisn + '</small></td>';
+        tableRows += '<td class="text-start fw-bold">' + r.nama_lengkap + '<br><small class="text-muted fw-normal">' + r.nis + '</small></td>';
         tableRows += '<td>' + r.kelas + '</td>';
         tableRows += '<td class="fw-bold text-success">' + r.hadir + '</td>';
         tableRows += '<td class="fw-bold text-success">' + r.terlambat + '</td>';
