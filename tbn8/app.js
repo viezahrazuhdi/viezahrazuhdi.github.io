@@ -2773,6 +2773,7 @@ async function prosesSimpanJurnal(e) {
     mata_pelajaran: document.getElementById('j-mapel').value,
     jam_pelajaran: document.getElementById('j-jam').value,
     topik_jurnal: document.getElementById('j-topik').value,
+	catatan: document.getElementById('j-catatan').value,
     data_absen: dataAbsenArray 
   };
 
