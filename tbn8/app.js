@@ -2892,9 +2892,9 @@ async function loadDataIntervensi(targetKelas, targetTanggal) {
         let p = response.data_presensi[i];
         
         let badgeColor = 'bg-danger';
-        if (p.status_kehadiran === 'Hadir' || p.status_kehadiran === 'Terlambat') badgeColor = 'bg-success';
-        else if (p.status_kehadiran === 'Sakit') badgeColor = 'bg-warning text-dark';
-        else if (p.status_kehadiran === 'Izin') badgeColor = 'bg-info text-dark';
+        if (p.status_kehadiran === 'H' || p.status_kehadiran === 'T') badgeColor = 'bg-success';
+        else if (p.status_kehadiran === 'S') badgeColor = 'bg-warning text-dark';
+        else if (p.status_kehadiran === 'I') badgeColor = 'bg-info text-dark';
 
         let tandaIntervensi = p.intervensi_wali === 'Ya' ? '<br><small class="text-primary"><i class="fa-solid fa-check-circle me-1"></i>Diubah Wali</small>' : '';
 
@@ -2905,7 +2905,7 @@ async function loadDataIntervensi(targetKelas, targetTanggal) {
         tableRows += '<td><span class="badge bg-light text-dark border"><i class="fa-regular fa-clock me-1"></i>' + p.waktu_pulang + '</span></td>';
         tableRows += '<td><span class="badge ' + badgeColor + '">' + p.status_kehadiran + '</span>' + tandaIntervensi + '</td>';
         tableRows += '<td><div class="btn-group font-monospace">';
-        tableRows += '<button class="btn btn-sm btn-primary shadow-sm" title="Ubah Status" onclick="bukaModalIntervensi(\'' + p.nis + '\', \'' + p.id_siswa + '\')"><i class="fa-solid fa-pen-to-square"></i></button>';
+        tableRows += '<button class="btn btn-sm btn-primary shadow-sm" title="Ubah Status" onclick="bukaModalIntervensi(\'' + p.id_siswa + '\')"><i class="fa-solid fa-pen-to-square"></i></button>';
         
         let dataLengkap = window.allSiswa.find(function(s) { return s.id_siswa.toString() === p.id_siswa.toString(); });
         let noHp = dataLengkap ? dataLengkap.no_hp_wali : "";
@@ -2932,7 +2932,7 @@ function bukaModalIntervensi(idSiswa) {
   document.getElementById('int-nama-siswa').innerText = dataSiswa.nama_lengkap;
   
   const statusSelect = document.getElementById('int-status');
-  if (dataSiswa.status_kehadiran === 'S' || dataSiswa.status_kehadiran === 'I' || dataSiswa.status_kehadiran === 'A') {
+  if (dataSiswa.status_kehadiran !== 'S' || dataSiswa.status_kehadiran === 'I' || dataSiswa.status_kehadiran === 'A' || dataSiswa.status_kehadiran === 'T') {
     statusSelect.value = dataSiswa.status_kehadiran;
   } else {
     statusSelect.value = 'H';
