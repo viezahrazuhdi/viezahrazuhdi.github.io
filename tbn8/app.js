@@ -2425,8 +2425,8 @@ async function bukaModalEditJurnal(idSesi) {
     for (let i = 0; i < dataSiswa.length; i++) {
       let s = dataSiswa[i];
       
-      let statusSiswa = 'Hadir'; 
-      let dataAbsenSiswa = absenTersimpan.find(function(a) { return a.nis.toString() === s.nis.toString(); });
+      let statusSiswa = 'H'; 
+      let dataAbsenSiswa = absenTersimpan.find(function(a) { return a.id.toString() === s.id_siswa.toString(); });
       if (dataAbsenSiswa) {
         statusSiswa = dataAbsenSiswa.status;
       }
