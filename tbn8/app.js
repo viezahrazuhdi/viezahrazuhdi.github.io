@@ -2911,7 +2911,7 @@ async function loadDataIntervensi(targetKelas, targetTanggal) {
         let dataLengkap = window.allSiswa.find(function(s) { return s.id_siswa.toString() === p.id_siswa.toString(); });
         let noHp = dataLengkap ? dataLengkap.no_hp_wali : "";
         
-        tableRows += '<button class="btn btn-sm btn-success shadow-sm" title="Hubungi Wali" onclick="bukaModalNotif(\'' + p.nis + '\', \'' + p.nama_lengkap + '\', \'' + p.status_kehadiran + '\', \'' + noHp + '\')"><i class="fa-brands fa-whatsapp"></i></button>';
+        tableRows += '<button class="btn btn-sm btn-success shadow-sm" title="Hubungi Wali" onclick="bukaModalNotif(\'' + p.id_siswa + '\', \'' + p.nis + '\', \'' + p.nama_lengkap + '\', \'' + p.status_kehadiran + '\', \'' + noHp + '\')"><i class="fa-brands fa-whatsapp"></i></button>';
         tableRows += '</div></td>';
         tableRows += '</tr>';
       }
@@ -2982,7 +2982,8 @@ document.addEventListener("DOMContentLoaded", function() {
    FITUR NOTIFIKASI WALI MURID
    ========================================== */
 
-function bukaModalNotif(nis, nama, status, noHp) {
+function bukaModalNotif(id, nis, nama, status, noHp) {
+  document.getElementById('notif-id').value = id;
   document.getElementById('notif-nis').value = nis;
   document.getElementById('notif-nama-siswa').innerText = nama;
   document.getElementById('notif-status').value = status;
@@ -3022,7 +3023,7 @@ function kirimNotifWA() {
   pesan += "Status Kehadiran: *" + status.toUpperCase() + "*\n\n";
   
   if (status === 'Alpa') {
-    pesan += "Mohon konfirmasinya terkait ketidakhadiran ananda pada hari ini. Terima kasih.";
+    pesan += "Mohon konfirmasinya terkait ketidakhadiran ananda. Terima kasih.";
   } else {
     pesan += "Terima kasih atas perhatiannya.";
   }
@@ -3034,6 +3035,7 @@ function kirimNotifWA() {
 }
 
 async function kirimNotifEmail() {
+  const id = document.getElementById('notif-id').value;
   const nis = document.getElementById('notif-nis').value;
   const status = document.getElementById('notif-status').value;
   const tgl = document.getElementById('notif-tanggal').value;
@@ -3043,7 +3045,7 @@ async function kirimNotifEmail() {
   btn.disabled = true; btn.innerHTML = '<span class="spinner-border spinner-border-sm me-2"></span>Mengirim...';
 
   try {
-    const payload = { nis: nis, status: status, tanggal: tgl, keterangan: "" };
+    const payload = { idSiswa: id, nis: nis, status: status, tanggal: tgl, keterangan: "" };
     const res = await callAPI('kirimEmailNotifikasi', payload);
     
     Swal.fire({ icon: 'success', title: 'Terkirim!', text: res.message, timer: 2000, showConfirmButton: false });
