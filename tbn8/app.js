@@ -2892,6 +2892,7 @@ async function loadDataIntervensi(targetKelas, targetTanggal) {
         let p = response.data_presensi[i];
         
         let badgeColor = 'bg-danger';
+		let statusKehadiran = {'H': 'Hadir', 'T': 'Terlambat', 'S': 'Sakit', 'I': 'Izin', 'A': 'Alpa'};
         if (p.status_kehadiran === 'H' || p.status_kehadiran === 'T') badgeColor = 'bg-success';
         else if (p.status_kehadiran === 'S') badgeColor = 'bg-warning text-dark';
         else if (p.status_kehadiran === 'I') badgeColor = 'bg-info text-dark';
@@ -2903,7 +2904,7 @@ async function loadDataIntervensi(targetKelas, targetTanggal) {
         tableRows += '<td><div class="fw-bold">' + p.nama_lengkap + '</div><small class="text-muted">' + p.nis + '</small></td>';
         tableRows += '<td><span class="badge bg-light text-dark border"><i class="fa-regular fa-clock me-1"></i>' + p.waktu_masuk + '</span></td>';
         tableRows += '<td><span class="badge bg-light text-dark border"><i class="fa-regular fa-clock me-1"></i>' + p.waktu_pulang + '</span></td>';
-        tableRows += '<td><span class="badge ' + badgeColor + '">' + p.status_kehadiran + '</span>' + tandaIntervensi + '</td>';
+        tableRows += '<td><span class="badge ' + badgeColor + '">' + statusKehadiran[p.status_kehadiran] + '</span>' + tandaIntervensi + '</td>';
         tableRows += '<td><div class="btn-group font-monospace">';
         tableRows += '<button class="btn btn-sm btn-primary shadow-sm" title="Ubah Status" onclick="bukaModalIntervensi(\'' + p.id_siswa + '\')"><i class="fa-solid fa-pen-to-square"></i></button>';
         
