@@ -2446,8 +2446,8 @@ async function bukaModalEditJurnal(idSesi) {
       rowsHtml += '<input type="radio" class="btn-check edit-radio-absen" name="e_absen_' + s.id_siswa + '" id="eh_' + s.id_siswa + '" value="H" data-id="' + s.id_siswa + '" ' + chkH + '>';
       rowsHtml += '<label class="btn btn-outline-success btn-sm px-3" for="eh_' + s.id_siswa + '">H</label>';
 
-	  rowsHtml += '<input type="radio" class="btn-check edit-radio-absen" name="e_absen_' + s.id_siswa + '" id="eh_' + s.id_siswa + '" value="T" data-id="' + s.id_siswa + '" ' + chkT + '>';
-      rowsHtml += '<label class="btn btn-outline-success btn-sm px-3" for="eh_' + s.id_siswa + '">T</label>';
+	  rowsHtml += '<input type="radio" class="btn-check edit-radio-absen" name="e_absen_' + s.id_siswa + '" id="et_' + s.id_siswa + '" value="T" data-id="' + s.id_siswa + '" ' + chkT + '>';
+      rowsHtml += '<label class="btn btn-outline-success btn-sm px-3" for="et_' + s.id_siswa + '">T</label>';
       
       rowsHtml += '<input type="radio" class="btn-check edit-radio-absen" name="e_absen_' + s.id_siswa + '" id="es_' + s.id_siswa + '" value="S" data-id="' + s.id_siswa + '" ' + chkS + '>';
       rowsHtml += '<label class="btn btn-outline-warning btn-sm px-3" for="es_' + s.id_siswa + '">S</label>';
@@ -2631,17 +2631,19 @@ async function cetakJurnalMengajar() {
     let rekapAbsen = "";
     try {
       let absenArr = JSON.parse(r.absen_json);
-      let sakit = 0, izin = 0, alpa = 0;
+      let terlambat = 0, sakit = 0, izin = 0, alpa = 0;
       
       for(let a=0; a<absenArr.length; a++) {
-        if(absenArr[a].status === 'Sakit') sakit++;
-        else if(absenArr[a].status === 'Izin') izin++;
-        else if(absenArr[a].status === 'Alpa') alpa++;
+        if(absenArr[a].status === 'T') terlambat++;
+		else if(absenArr[a].status === 'S') sakit++;
+        else if(absenArr[a].status === 'I') izin++;
+        else if(absenArr[a].status === 'A') alpa++;
       }
       
-      if(sakit === 0 && izin === 0 && alpa === 0) {
+      if(sakit === 0 && izin === 0 && alpa === 0 && terlambat === 0) {
         rekapAbsen = "Nihil (Hadir Semua)";
       } else {
+		if(terlambat > 0) rekapAbsen += "T:" + terlambat + " ";
         if(sakit > 0) rekapAbsen += "S:" + sakit + " ";
         if(izin > 0) rekapAbsen += "I:" + izin + " ";
         if(alpa > 0) rekapAbsen += "A:" + alpa;
