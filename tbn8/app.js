@@ -727,7 +727,7 @@ function downloadTemplateExcel() {
   /* 1. Buat array data dengan 3 Baris: Header, Petunjuk, dan Data Dummy */
   const templateData = [
     ["NIS", "NISN", "Nama Lengkap", "NIK", "Jenis Kelamin (L/P)", "Tempat Lahir", "Tanggal Lahir (YYYY-MM-DD)", "Alamat Lengkap", "Gol Darah", "Tingkat Kelas (7/8/9)", "Rombel Kelas", "Nama Wali", "No HP Wali", "Email Wali"],
-    ["(WAJIB) Unik", "Format Teks", "(WAJIB) Sesuai Ijazah", "Sesuai KK", "(WAJIB) L atau P", "(Opsional)", "(Opsional) YYYY-MM-DD", "(Opsional)", "(Opsional) -/A/B/AB/O", "(WAJIB) 7/8/9", "(WAJIB) Cth: PPLG 1", "(Opsional)", "(Opsional) Format Teks", "(Opsional)"],
+    ["(Opsional) Format Teks", "(Opsional) Format Teks", "(Wajib) Sesuai Ijazah", "Sesuai KK", "(WAJIB) L atau P", "(Opsional)", "(Opsional) YYYY-MM-DD", "(Opsional)", "(Opsional) -/A/B/AB/O", "(WAJIB) 7/8/9", "(WAJIB) Cth: PPLG 1", "(Opsional)", "(Opsional) Format Teks", "(Opsional)"],
     ["2425001", "0056123456", "Budi Santoso", "1234567890123456", "L", "Jakarta", "2010-05-15", "Jl. Merdeka No. 1", "O", "X", "PPLG 1", "Bapak Budi", "081234567890", "budi@email.com"]
   ];
 
