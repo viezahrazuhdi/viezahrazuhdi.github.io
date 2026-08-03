@@ -816,7 +816,7 @@ document.addEventListener("DOMContentLoaded", function() {
 			  nis: (row[0] || "").toString(),
               nisn: (row[1] || "").toString(),
               nama_lengkap: row[2] || "",
-			  NIK: row[3] || "",
+			  nik: row[3] || "",
               jenis_kelamin: row[4] || "L",
               tempat_lahir: row[5] || "",
               tanggal_lahir: tglLahir,
